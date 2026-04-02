@@ -128,8 +128,14 @@ html {
     background-image: url('/🇩🇿🇩🇿🇩🇿🇩🇿🇩🇿👑💕.jpg');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
     background-repeat: no-repeat;
+    background-attachment: scroll;
+  }
+
+  @media (min-width: 1024px) {
+    .bg-roman-pattern {
+      background-attachment: fixed;
+    }
   }
 }
 
