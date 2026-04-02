@@ -61,13 +61,6 @@ const HeroSection = () => {
         </Reveal>
       </div>
 
-      {/* Arrows */}
-      <button onClick={prev} className="absolute left-4 top-1/2 -translate-y-1/2 p-2 text-cream/70 hover:text-cream transition-colors" aria-label="Précédent">
-        <ChevronLeft className="w-8 h-8" />
-      </button>
-      <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-cream/70 hover:text-cream transition-colors" aria-label="Suivant">
-        <ChevronRight className="w-8 h-8" />
-      </button>
 
       {/* Dots */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">

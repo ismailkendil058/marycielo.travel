@@ -49,14 +49,19 @@ const DestinationDetail = () => {
               />
             ))}
             {images.length > 1 && (
-              <>
-                <button onClick={() => setCurrentImg(i => (i - 1 + images.length) % images.length)} className="absolute left-4 top-1/2 -translate-y-1/2 text-cream/70 hover:text-cream">
-                  <ChevronLeft className="w-8 h-8" />
-                </button>
-                <button onClick={() => setCurrentImg(i => (i + 1) % images.length)} className="absolute right-4 top-1/2 -translate-y-1/2 text-cream/70 hover:text-cream">
-                  <ChevronRight className="w-8 h-8" />
-                </button>
-              </>
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+                {images.map((_src, i) => (
+                  <button
+                    key={i}
+                    onClick={(e) => { e.stopPropagation(); setCurrentImg(i); }}
+                    className={cn(
+                      "w-2 h-2 rounded-full transition-all duration-300",
+                      i === currentImg ? "bg-cream w-6" : "bg-cream/40"
+                    )}
+                    aria-label={`Image ${i + 1}`}
+                  />
+                ))}
+              </div>
             )}
           </>
         ) : (
