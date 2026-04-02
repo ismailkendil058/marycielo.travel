@@ -1,7 +1,7 @@
 const Footer = () => (
-  <footer className="bg-foreground text-cream/70 section-padding py-12">
-    <div className="max-w-6xl mx-auto text-center">
-      <h3 className="font-display text-2xl text-cream tracking-[0.2em] mb-2">
+  <footer className="bg-roman-pattern text-foreground/80 section-padding py-12 relative overflow-hidden">
+    <div className="max-w-6xl mx-auto text-center relative z-10">
+      <h3 className="font-display text-2xl text-foreground tracking-[0.2em] mb-2">
         marycielo.travel
       </h3>
       <p className="font-arabic text-sm mb-6" dir="rtl">وكالة سفر في الجزائر</p>
