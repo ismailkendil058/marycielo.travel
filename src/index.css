@@ -13,7 +13,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
 
-    --primary: 8 100% 35%;
+    --primary: 8 95% 25%;
     --primary-foreground: 45 52% 86%;
 
     --secondary: 45 52% 86%;
@@ -35,7 +35,7 @@
     --radius: 0.25rem;
 
     --cream: 45 52% 86%;
-    --deep-red: 8 100% 35%;
+    --deep-red: 8 95% 25%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -122,6 +122,16 @@ html {
 
   .arabic-subtitle {
     @apply font-arabic text-muted-foreground text-sm mt-1;
+  }
+
+  .bg-roman-pattern {
+    background-color: hsl(var(--cream));
+    background-image:
+      linear-gradient(rgba(245, 234, 208, 0.8), rgba(245, 234, 208, 0.8)),
+      url('/download (8).jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
   }
 }
 

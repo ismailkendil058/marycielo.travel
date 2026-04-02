@@ -21,8 +21,8 @@ const ServicesSection = () => {
   const services = getServices();
 
   return (
-    <section id="services" className="section-padding bg-background">
-      <div className="max-w-6xl mx-auto">
+    <section id="services" className="section-padding bg-roman-pattern relative overflow-hidden">
+      <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-16">
           <Reveal width="100%">
             <h2 className="font-display text-3xl md:text-5xl text-foreground mb-3">
