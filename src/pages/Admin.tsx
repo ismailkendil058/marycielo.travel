@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { registerSW } from 'virtual:pwa-register';
 
 import { getBookings, markBookingContacted, getServices, updateService, getDestinations, addDestination, updateDestination, deleteDestination, type Service, type Destination, type Booking } from '@/lib/store';
-import { LogOut, Check, Trash2, Plus, Edit2, X } from 'lucide-react';
+import { LogOut, Check, Trash2, Plus, Edit2, X, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { compressImage, cn } from '@/lib/utils';
 
 const ADMIN_PASSWORD = 'admin123';
 
@@ -162,14 +163,20 @@ const ServicesTab = ({ onRefresh }: { onRefresh: () => void }) => {
   const [editing, setEditing] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
 
-  const handleImageUpload = (service: Service, file: File) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      updateService({ ...service, cover_image_url: reader.result as string });
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleImageUpload = async (service: Service, file: File) => {
+    setIsUploading(true);
+    try {
+      const optimized = await compressImage(file, 1200, 0.7);
+      updateService({ ...service, cover_image_url: optimized });
       onRefresh();
-      toast.success('Image mise à jour');
-    };
-    reader.readAsDataURL(file);
+      toast.success('Image mise à jour (optimisée)');
+    } catch (error) {
+      toast.error('Erreur lors de l\'optimisation de l\'image');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -177,13 +184,19 @@ const ServicesTab = ({ onRefresh }: { onRefresh: () => void }) => {
       <h2 className="font-display text-2xl text-foreground mb-4">Services</h2>
       {services.map(s => (
         <div key={s.id} className="bg-background border border-border p-4 flex flex-col sm:flex-row gap-4">
-          <div className="w-20 h-20 bg-muted overflow-hidden flex-shrink-0 relative">
+          <div className="w-20 h-20 bg-muted overflow-hidden flex-shrink-0 relative group">
             {s.cover_image_url && <img src={s.cover_image_url} alt={s.name_fr} className="w-full h-full object-cover" />}
-            <label className="absolute inset-0 flex items-center justify-center bg-foreground/30 text-cream text-xs cursor-pointer opacity-0 hover:opacity-100 transition-opacity">
+            {isUploading && (
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                <Loader2 className="w-5 h-5 text-white animate-spin" />
+              </div>
+            )}
+            <label className="absolute inset-0 flex items-center justify-center bg-foreground/30 text-cream text-xs cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
               <input
                 type="file"
                 accept="image/*"
                 className="hidden"
+                disabled={isUploading}
                 onChange={e => e.target.files?.[0] && handleImageUpload(s, e.target.files[0])}
               />
               Photo
@@ -232,6 +245,7 @@ const DestinationsTab = ({ onRefresh }: { onRefresh: () => void }) => {
   const [form, setForm] = useState({ name_fr: '', name_ar: '', service_id: services[0]?.id || '', description_fr: '', description_ar: '' });
   const [newImages, setNewImages] = useState<string[]>([]);
   const [imageUrl, setImageUrl] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
   const resetForm = () => {
     setForm({ name_fr: '', name_ar: '', service_id: services[0]?.id || '', description_fr: '', description_ar: '' });
@@ -241,12 +255,20 @@ const DestinationsTab = ({ onRefresh }: { onRefresh: () => void }) => {
     setShowForm(false);
   };
 
-  const handleImageFiles = (files: FileList) => {
-    Array.from(files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = () => setNewImages(prev => [...prev, reader.result as string]);
-      reader.readAsDataURL(file);
-    });
+  const handleImageFiles = async (files: FileList) => {
+    setIsUploading(true);
+    const fileArray = Array.from(files);
+    try {
+      for (const file of fileArray) {
+        const optimized = await compressImage(file, 1200, 0.7);
+        setNewImages(prev => [...prev, optimized]);
+      }
+      toast.success(`${fileArray.length} image(s) optimisée(s)`);
+    } catch (error) {
+      toast.error('Erreur lors du traitement des images');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -320,10 +342,17 @@ const DestinationsTab = ({ onRefresh }: { onRefresh: () => void }) => {
               <div className="h-px flex-1 bg-border" />
             </div>
 
-            <label className="flex items-center justify-center gap-2 border border-dashed border-border p-4 cursor-pointer hover:bg-muted transition-colors text-sm font-body text-muted-foreground">
-              <Plus className="w-4 h-4" />
-              <span>Télécharger depuis votre appareil</span>
-              <input type="file" accept="image/*" multiple className="hidden" onChange={e => e.target.files && handleImageFiles(e.target.files)} />
+            <label className={cn(
+              "flex items-center justify-center gap-2 border border-dashed border-border p-4 cursor-pointer hover:bg-muted transition-colors text-sm font-body text-muted-foreground",
+              isUploading && "opacity-50 cursor-not-allowed"
+            )}>
+              {isUploading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Plus className="w-4 h-4" />
+              )}
+              <span>{isUploading ? 'Traitement...' : 'Télécharger depuis votre appareil'}</span>
+              <input type="file" accept="image/*" multiple className="hidden" disabled={isUploading} onChange={e => e.target.files && handleImageFiles(e.target.files)} />
             </label>
 
             {newImages.length > 0 && (

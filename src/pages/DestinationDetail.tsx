@@ -4,6 +4,8 @@ import { getDestinationById, getServices } from '@/lib/store';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import BookingModal from '@/components/BookingModal';
 import Footer from '@/components/Footer';
+import { OptimizedImage } from '@/components/OptimizedImage';
+import { cn } from '@/lib/utils';
 
 const DestinationDetail = () => {
   const { destinationId } = useParams();
@@ -36,11 +38,14 @@ const DestinationDetail = () => {
         {hasImages ? (
           <>
             {images.map((src, i) => (
-              <img
+              <OptimizedImage
                 key={i}
                 src={src}
                 alt={`${destination.name_fr} ${i + 1}`}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${i === currentImg ? 'opacity-100' : 'opacity-0'}`}
+                className={cn(
+                  "absolute inset-0 w-full h-full object-cover transition-opacity duration-700",
+                  i === currentImg ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                )}
               />
             ))}
             {images.length > 1 && (

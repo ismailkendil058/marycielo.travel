@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Reveal } from './Reveal';
 import hero1 from '@/assets/hero-1.jpg';
 import hero2 from '@/assets/hero-2.jpg';
 import hero3 from '@/assets/hero-3.jpg';
@@ -35,21 +36,29 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-        <h1 className="font-display text-4xl md:text-6xl lg:text-7xl tracking-[0.2em] text-cream mb-4">
-          marycielo.travel
-        </h1>
-        <p className="font-body text-sm md:text-base tracking-[0.3em] uppercase text-cream/80 mb-2">
-          Votre voyage commence ici
-        </p>
-        <p className="font-arabic text-base md:text-lg text-cream/60 mb-10" dir="rtl">
-          رحلتك تبدأ من هنا
-        </p>
-        <a
-          href="#services"
-          className="btn-primary"
-        >
-          Découvrir nos voyages
-        </a>
+        <Reveal width="100%">
+          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl tracking-[0.2em] text-cream mb-4">
+            marycielo.travel
+          </h1>
+        </Reveal>
+        <Reveal width="100%" delay={0.4}>
+          <p className="font-body text-sm md:text-base tracking-[0.3em] uppercase text-cream/80 mb-2">
+            Votre voyage commence ici
+          </p>
+        </Reveal>
+        <Reveal width="100%" delay={0.6}>
+          <p className="font-arabic text-base md:text-lg text-cream/60 mb-10" dir="rtl">
+            رحلتك تبدأ من هنا
+          </p>
+        </Reveal>
+        <Reveal width="100%" delay={0.8} direction="up">
+          <a
+            href="#services"
+            className="btn-primary"
+          >
+            Découvrir nos voyages
+          </a>
+        </Reveal>
       </div>
 
       {/* Arrows */}

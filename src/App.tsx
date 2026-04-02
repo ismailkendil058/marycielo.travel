@@ -7,6 +7,7 @@ import ServiceDestinations from "./pages/ServiceDestinations.tsx";
 import DestinationDetail from "./pages/DestinationDetail.tsx";
 import Admin from "./pages/Admin.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import ScrollToTop from "./components/ScrollToTop.tsx";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +16,7 @@ const App = () => (
     <TooltipProvider>
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/services/:serviceSlug" element={<ServiceDestinations />} />

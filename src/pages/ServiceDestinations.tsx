@@ -2,6 +2,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getServices, getDestinationsByService } from '@/lib/store';
 import { ArrowLeft } from 'lucide-react';
 import Footer from '@/components/Footer';
+import { OptimizedImage } from '@/components/OptimizedImage';
+import { Reveal } from '@/components/Reveal';
 
 import serviceVisa from '@/assets/service-visa.jpg';
 import serviceBilletterie from '@/assets/service-billetterie.jpg';
@@ -36,7 +38,7 @@ const ServiceDestinations = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="relative h-[40vh] overflow-hidden">
-        <img
+        <OptimizedImage
           src={service.cover_image_url || defaultImages[service.id] || serviceVisa}
           alt={service.name_fr}
           className="absolute inset-0 w-full h-full object-cover"
@@ -62,26 +64,32 @@ const ServiceDestinations = () => {
           <p className="text-center text-muted-foreground font-body">Aucune destination disponible pour le moment.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {destinations.map(dest => (
-              <button
-                key={dest.id}
-                onClick={() => navigate(`/destination/${dest.id}`)}
-                className="group text-left bg-background border border-border overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                <div className="aspect-[4/3] overflow-hidden bg-muted">
-                  {dest.images.length > 0 ? (
-                    <img src={dest.images[0]} alt={dest.name_fr} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-muted-foreground font-display text-lg">
-                      {dest.name_fr}
-                    </div>
-                  )}
-                </div>
-                <div className="p-5">
-                  <h3 className="font-display text-xl text-foreground mb-1">{dest.name_fr}</h3>
-                  <p className="font-arabic text-sm text-muted-foreground" dir="rtl">{dest.name_ar}</p>
-                </div>
-              </button>
+            {destinations.map((dest, index) => (
+              <Reveal key={dest.id} delay={0.1 * (index % 3)} width="100%">
+                <button
+                  onClick={() => navigate(`/destination/${dest.id}`)}
+                  className="group text-left bg-background border border-border overflow-hidden hover:shadow-lg transition-all w-full"
+                >
+                  <div className="aspect-[4/3] overflow-hidden bg-muted">
+                    {dest.images.length > 0 ? (
+                      <OptimizedImage
+                        src={dest.images[0]}
+                        alt={dest.name_fr}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground font-display text-lg">
+                        {dest.name_fr}
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-display text-xl text-foreground mb-1">{dest.name_fr}</h3>
+                    <p className="font-arabic text-sm text-muted-foreground" dir="rtl">{dest.name_ar}</p>
+                  </div>
+                </button>
+              </Reveal>
             ))}
           </div>
         )}
